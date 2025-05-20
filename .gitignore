@@ -1,9 +1,11 @@
 /.idea
+./idea
 .mvn
 **/target/
 /target/
 /libs
 /mods-mvn
+**/*.iml
 
 .settings/
 **/.settings/
@@ -15,8 +17,3 @@
 **/.project
 **/.DS_Store
 .DS_Store
-.qodo
-.intellij-game-run
-
-
-.qodo
