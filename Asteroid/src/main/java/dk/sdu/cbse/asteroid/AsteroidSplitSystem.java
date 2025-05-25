@@ -9,12 +9,15 @@ import javafx.scene.paint.Color;
 
 import java.util.Random;
 
-public class AsteroidSplitSystem implements IPostEntityProcessingService {
+public final class AsteroidSplitSystem implements IPostEntityProcessingService {
 
+    /**
+     * Random library allows for random rotation and position of asteroids.
+     */
     private final Random random = new Random();
 
     @Override
-    public void process(GameData gameData, World world) {
+    public void process(final GameData gameData, final World world) {
         for (Entity e : world.getEntities()) {
             if (e instanceof IAsteroid && e.getHealth() <= 0) {
                 Asteroid original = (Asteroid) e;
@@ -26,12 +29,14 @@ public class AsteroidSplitSystem implements IPostEntityProcessingService {
                         child.setY(original.getY() + random.nextInt(10) - 5);
                         child.setRotation(random.nextDouble() * 360);
                         child.setColor(Color.GREY);
-                        child.setPolygonCoordinates(AsteroidPlugin.generateRandomPolygon(child.getRadius()));
+                        child.setPolygonCoordinates(
+                                AsteroidPlugin.generateRandomPolygon(
+                                        child.getRadius()));
                         world.addEntity(child);
                     }
                 }
 
-                world.removeEntity(original.getID());
+                world.removeEntity(original.getId());
             }
         }
     }

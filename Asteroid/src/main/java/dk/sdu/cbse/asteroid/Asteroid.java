@@ -3,14 +3,25 @@ package dk.sdu.cbse.asteroid;
 import dk.sdu.cbse.common.data.Entity;
 import dk.sdu.cbse.common.entities.asteroid.IAsteroid;
 
+/**
+ * Asteroid class that extends the Entity class.
+ * Expanded to allow different size asteroids.
+ */
+public final class Asteroid extends Entity implements IAsteroid {
 
-public class Asteroid extends Entity implements IAsteroid{
-    private int size; // 3 = large, 2 = medium, 1 = small
+    /**
+     * Defines the size of the asteroid. 3 = large, 2 = medium, 1 = small
+     */
+    private int size;
 
-    public Asteroid(int size) {
-        this.size = size;
-        setRadius(10 * size);
-        setHealth(50 * size);
+    /**
+     * Constructor for Asteroid.
+     * @param asteroidSize size of the asteroid.3 = large, 2 = medium, 1 = small
+     */
+    public Asteroid(final int asteroidSize) {
+        this.size = asteroidSize;
+        setRadius(10 * asteroidSize);
+        setHealth(50 * asteroidSize);
         setDamage(10);
     }
 
@@ -18,7 +29,7 @@ public class Asteroid extends Entity implements IAsteroid{
         return size;
     }
 
-    public void setSize(int size) {
-        this.size = size;
+    public void setSize(final int asteroidSize) {
+        this.size = asteroidSize;
     }
 }

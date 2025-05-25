@@ -8,12 +8,21 @@ import javafx.scene.input.KeyEvent;
 
 public class InputProcessor {
 
-    public static void setupInputHandling(Scene scene, GameData gameData) {
+    /**
+     * Method for setting up an event for when a key is pressed on the scene.
+     * @param scene Game Scene
+     * @param gameData gameData
+     */
+    public static void setupInputHandling(
+            final Scene scene,
+            final GameData gameData) {
         scene.setOnKeyPressed(event -> handleKey(event, gameData, true));
         scene.setOnKeyReleased(event -> handleKey(event, gameData, false));
     }
 
-    private static void handleKey(KeyEvent event, GameData gameData, boolean isPressed) {
+    private static void handleKey(final KeyEvent event,
+                                  final GameData gameData,
+                                  final boolean isPressed) {
         KeyCode code = event.getCode();
 
         if (code == KeyCode.UP) {

@@ -4,25 +4,31 @@ import dk.sdu.cbse.common.data.Entity;
 import dk.sdu.cbse.common.data.GameData;
 import dk.sdu.cbse.common.data.World;
 import dk.sdu.cbse.common.services.IGamePluginService;
-import javafx.scene.paint.Color;
 
-public class EnemyPlugin implements IGamePluginService {
+public final class EnemyPlugin implements IGamePluginService {
 
+    /**
+     * Initial enemy to spawn.
+     */
     private Entity enemy;
 
-    public EnemyPlugin(){
+    /**
+     * EnemyPlugin constructor.
+     */
+    public EnemyPlugin() {
 
     }
 
     @Override
-    public void start(GameData gameData, World world) {
+    public void start(final GameData gameData, final World world) {
         enemy = createEnemyShip(gameData);
         world.addEntity(enemy);
     }
 
-    private Entity createEnemyShip(GameData gameData) {
+    private Entity createEnemyShip(final GameData gameData) {
         Entity enemy = new Enemy();
-        enemy.setPolygonCoordinates(-10, -10, 10, 0, -10, 10); // triangular shape
+        // triangular shape
+        enemy.setPolygonCoordinates(-10, -10, 10, 0, -10, 10);
         // Creates the enemy at a random point.
         enemy.setX(Math.random() * gameData.getDisplayWidth());
         enemy.setY(Math.random() * gameData.getDisplayHeight());
@@ -32,7 +38,7 @@ public class EnemyPlugin implements IGamePluginService {
     }
 
     @Override
-    public void stop(GameData gameData, World world) {
+    public void stop(final GameData gameData, final World world) {
         world.removeEntity(enemy);
     }
 }

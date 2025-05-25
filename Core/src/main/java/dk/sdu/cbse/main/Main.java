@@ -25,36 +25,75 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Main extends Application {
+public final class Main extends Application {
 
+    /**
+     * Gamedata for the game.
+     */
     private final GameData gameData = new GameData();
+
+    /**
+     * World for having all entities.
+     */
     private final World world = new World();
+
+    /**
+     * Map of all polygons added to the game.
+     */
     private final Map<Entity, Polygon> polygons = new ConcurrentHashMap<>();
+
+    /**
+     * GameWindow pane.
+     */
     private final Pane gameWindow = new Pane();
+
+    /**
+     * Label for displaying score.
+     */
     private final Label scoreLabel = new Label("Score: 0");
 
-    private final Rectangle healthBarBackground = new Rectangle(200, 20, Color.DARKRED);
+    /**
+     * Background for displaying health.
+     */
+    private final Rectangle healthBarBackground =
+            new Rectangle(200, 20, Color.DARKRED);
+
+    /**
+     * Healthbar.
+     */
     private final Rectangle healthBar = new Rectangle(200, 20, Color.LIMEGREEN);
 
+    /**
+     * Label for displaying game over.
+     */
     private final Label gameOverLabel = new Label("GAME OVER");
+
+    /**
+     * Restart button for restarting the game.
+     */
     private final Button restartButton = new Button("Restart");
+
+    /**
+     * Flag for when the game over screen has been shown.
+     */
     private boolean gameOverShown = false;
 
 
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         launch(args);
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
+    public void start(final Stage primaryStage) {
+        gameWindow.setPrefSize(gameData.getDisplayWidth(),
+                gameData.getDisplayHeight());
         gameWindow.setStyle("-fx-background-color: black;");
         Scene scene = new Scene(gameWindow);
 
         InputProcessor.setupInputHandling(scene, gameData);
 
-        for (IGamePluginService iGamePluginService : getPluginServices()){
+        for (IGamePluginService iGamePluginService : getPluginServices()) {
             iGamePluginService.start(gameData, world);
         }
 
@@ -107,7 +146,7 @@ public class Main extends Application {
 
         new AnimationTimer() {
             @Override
-            public void handle(long now) {
+            public void handle(final long now) {
                 float delta = (now - lastTime[0]) / 1_000_000_000f;
                 lastTime[0] = now;
 
@@ -123,11 +162,13 @@ public class Main extends Application {
 
     private void update() {
 
-        for (IEntityProcessingService entityProcessorService : getEntityProcessingServices()) {
+        for (IEntityProcessingService entityProcessorService
+                : getEntityProcessingServices()) {
             entityProcessorService.process(gameData, world);
         }
 
-        for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
+        for (IPostEntityProcessingService postEntityProcessorService
+                : getPostEntityProcessingServices()) {
             postEntityProcessorService.process(gameData, world);
         }
     }
@@ -158,32 +199,25 @@ public class Main extends Application {
                     polygon.setStroke(entity.getColor().darker());
                 }
 
-                System.out.println("Entity:" + entity + "Color: " + entity.getColor().toString());
-
                 polygons.put(entity, polygon);
                 gameWindow.getChildren().add(polygon);
             }
 
             // Entity color is changed when hit
-            if (entity.isRecentlyHit()){
-                float alpha = entity.getHitTimer() / 0.2f;
-                Color color = new Color(1.0f,1.0f - alpha, 1.0f - alpha, 1.0f);
-                polygon.setFill(color);
-            }else {
-                polygon.setFill(entity.getColor());
-            }
-
             if (entity.isInvincible()) {
                 polygon.setOpacity(0.5);
+                float alpha = entity.getInvincibilityTimer() / 0.5f;
+                Color color = new Color(1.0f, 1.0f - alpha, 1.0f - alpha, 1.0f);
+                polygon.setFill(color);
             } else {
                 polygon.setOpacity(1.0);
+                polygon.setFill(entity.getColor());
             }
 
             polygon.setTranslateX(entity.getX());
             polygon.setTranslateY(entity.getY());
             polygon.setRotate(entity.getRotation());
 
-            entity.updateHitTimer(gameData.getDelta());
             entity.updateInvincibility(gameData.getDelta());
         }
 
@@ -202,7 +236,7 @@ public class Main extends Application {
             } else {
                 healthBar.setFill(Color.RED);
             }
-        } else if (!gameOverShown){
+        } else if (!gameOverShown) {
             showGameOver();
         }
 
@@ -220,17 +254,23 @@ public class Main extends Application {
         return ServiceLocator.INSTANCE.locateAll(IGamePluginService.class);
     }
 
-    private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {
-        return ServiceLocator.INSTANCE.locateAll(IEntityProcessingService.class);
+    private Collection<? extends IEntityProcessingService>
+    getEntityProcessingServices() {
+        return ServiceLocator.INSTANCE.locateAll(
+                IEntityProcessingService.class);
     }
 
-    private Collection<? extends IPostEntityProcessingService> getPostEntityProcessingServices() {
-        return ServiceLocator.INSTANCE.locateAll(IPostEntityProcessingService.class);
+    private Collection<? extends IPostEntityProcessingService>
+    getPostEntityProcessingServices() {
+        return ServiceLocator.INSTANCE.locateAll(
+                IPostEntityProcessingService.class);
     }
 
-    private void addStars(int count) {
+    private void addStars(final int count) {
         for (int i = 0; i < count; i++) {
-            javafx.scene.shape.Circle star = new javafx.scene.shape.Circle(Math.random() * 2 + 1); // random radius
+            // random radius
+            javafx.scene.shape.Circle star =
+                    new javafx.scene.shape.Circle(Math.random() * 2 + 1);
             star.setCenterX(Math.random() * gameData.getDisplayWidth());
             star.setCenterY(Math.random() * gameData.getDisplayHeight());
             star.setFill(javafx.scene.paint.Color.WHITE);

@@ -1,22 +1,32 @@
 package dk.sdu.cbse.asteroid;
 
-import dk.sdu.cbse.asteroid.Asteroid;
 import dk.sdu.cbse.common.data.Entity;
 import dk.sdu.cbse.common.data.GameData;
 import dk.sdu.cbse.common.data.World;
 import dk.sdu.cbse.common.services.IEntityProcessingService;
 
-public class AsteroidControlSystem implements IEntityProcessingService {
+/**
+ * AsteroidControlSystem is responsible for moving the asteroids.
+ * Making them float around.
+ */
+public final class AsteroidControlSystem implements IEntityProcessingService {
+
+    /**
+     * Affects the speed of the asteroids.
+     */
+    private final double velocity = 0.5;
 
     @Override
-    public void process(GameData gameData, World world) {
+    public void process(final GameData gameData, final World world) {
         for (Entity e : world.getEntities(Asteroid.class)) {
+
+
 
             // Move forward
             double changeX = Math.cos(Math.toRadians(e.getRotation()));
             double changeY = Math.sin(Math.toRadians(e.getRotation()));
-            e.setX(e.getX() + changeX * 0.5);
-            e.setY(e.getY() + changeY * 0.5);
+            e.setX(e.getX() + changeX * velocity);
+            e.setY(e.getY() + changeY * velocity);
 
             // Wrap around screen
             if (e.getX() < 0) {

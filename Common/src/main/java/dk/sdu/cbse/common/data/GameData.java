@@ -1,11 +1,30 @@
 package dk.sdu.cbse.common.data;
 
-public class GameData {
+public final class GameData {
 
+    /**
+     * Width of the gamescreen.
+     */
     private int displayWidth = 1280;
+
+    /**
+     * Height of the gamescreen.
+     */
     private int displayHeight = 720;
+
+    /**
+     * GameKeys initialization for possible gamekeys.
+     */
     private final GameKeys keys = new GameKeys();
+
+    /**
+     * Used for updating deltatime.
+     */
     private float delta;
+
+    /**
+     * Create instance of score. Used to keep score.
+     */
     private final Score score = new Score();
 
     public GameKeys getKeys() {

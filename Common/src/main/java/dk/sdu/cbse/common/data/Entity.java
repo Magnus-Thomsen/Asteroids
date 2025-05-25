@@ -6,20 +6,64 @@ import javafx.scene.paint.Color;
 
 public class Entity implements Serializable {
 
-    private final UUID ID = UUID.randomUUID();
+    /**
+     * Creates a random UUID.
+     */
+    private final UUID id = UUID.randomUUID();
 
+    /**
+     * List of coordinates used for drawing a polygon.
+     */
     private double[] polygonCoordinates;
+
+    /**
+     * x-position of entity.
+     */
     private double x;
+
+    /**
+     * y-position of entity.
+     */
     private double y;
+
+    /**
+     * rotation of entity.
+     */
     private double rotation;
+
+    /**
+     * radius of entity.
+     */
     private float radius;
+
+    /**
+     * Color of entity.
+     */
     private Color color;
+
+    /**
+     * entity health, default 100.
+     */
     private float health = 100;
+
+    /**
+     * entity health, default 25.
+     */
     private float damage = 25;
-    private boolean recentlyHit = false;
-    private float hitTimer = 0f;
+
+    /**
+     * status for invincibility.
+     */
     private boolean invincible = false;
+
+    /**
+     * current timer for invincibility.
+     */
     private float invincibilityTimer = 0f;
+
+    /**
+     * Defines the owner of the entity.
+     */
     private String ownerID = null;
 
     public void setOwnerID(String id) {
@@ -30,8 +74,8 @@ public class Entity implements Serializable {
         return ownerID;
     }
 
-    public String getID() {
-        return ID.toString();
+    public String getId() {
+        return id.toString();
     }
 
 
@@ -103,33 +147,6 @@ public class Entity implements Serializable {
     }
 
 
-    public void setRecentlyHit(boolean hit) {
-        this.recentlyHit = hit;
-        this.hitTimer = 0.2f; // Flash for 0.2 seconds
-    }
-
-    public boolean isRecentlyHit() {
-        return recentlyHit;
-    }
-
-    public void updateHitTimer(float delta) {
-        if (recentlyHit) {
-            hitTimer -= delta;
-            if (hitTimer <= 0) {
-                recentlyHit = false;
-            }
-        }
-    }
-
-    public float getHitTimer() {
-        return hitTimer;
-    }
-
-    public void setHitTimer(float hitTimer) {
-        this.hitTimer = hitTimer;
-    }
-
-
     public boolean isInvincible() {
         return invincible;
     }
@@ -138,6 +155,11 @@ public class Entity implements Serializable {
         this.invincible = true;
         this.invincibilityTimer = duration;
     }
+
+    public float getInvincibilityTimer() {
+        return invincibilityTimer;
+    }
+
 
     public void updateInvincibility(float delta) {
         if (invincible) {

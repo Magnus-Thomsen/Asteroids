@@ -4,14 +4,38 @@ import dk.sdu.cbse.common.entities.bullet.IBullet;
 import dk.sdu.cbse.common.data.Entity;
 import javafx.scene.paint.Color;
 
-public class Bullet extends Entity implements IBullet {
+public final class Bullet extends Entity implements IBullet {
 
+    /**
+     * The rate of change in the x-position.
+     */
     private float dx;
+
+    /**
+     * The rate of change in the y-position.
+     */
     private float dy;
+
+    /**
+     * The speed of the bullet.
+     */
     private float speed;
+
+    /**
+     * How long the bullet should be present before it is removed.
+     */
     private float lifeTime;
 
-    public Bullet(){
+    /**
+     * How long the bullet should be present before it is removed.
+     */
+    private String ownerID = null;
+
+    /**
+     * Bullet constructor.
+     * Sets the speed, lifetime and color of the bullet.
+     */
+    public Bullet() {
         this.speed = 200f;      // default speed in pixels per second
         this.lifeTime = 4f;   // 1 second lifetime
         this.setColor(Color.RED);

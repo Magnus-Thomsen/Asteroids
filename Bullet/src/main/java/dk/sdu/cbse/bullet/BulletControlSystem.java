@@ -34,7 +34,7 @@ public class BulletControlSystem implements IEntityProcessingService {
 
             b.decreaseLifeTime((float) dt);
             if (b.getLifeTime() <= 0) {
-                world.removeEntity(b.getID());
+                world.removeEntity(b.getId());
             }
         }
     }

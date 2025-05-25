@@ -6,12 +6,15 @@ import dk.sdu.cbse.common.data.GameData;
 import dk.sdu.cbse.common.data.World;
 import dk.sdu.cbse.common.services.IEntityProcessingService;
 
-public class EnemyControlSystem implements IEntityProcessingService {
+public final class EnemyControlSystem implements IEntityProcessingService {
 
+    /**
+     * Cooldown after enemy shoots.
+     */
     private float shootCooldown = 0;
 
     @Override
-    public void process(GameData gameData, World world) {
+    public void process(final GameData gameData, final World world) {
         for (Entity e : world.getEntities(Enemy.class)) {
             // Randomly change direction a bit
             e.setRotation(e.getRotation() + (Math.random() - 0.5) * 10);
@@ -43,7 +46,8 @@ public class EnemyControlSystem implements IEntityProcessingService {
             shootCooldown -= gameData.getDelta();
             if (shootCooldown <= 0) {
                 world.addEntity(createBullet(e, gameData));
-                shootCooldown = 1.5f + (float) Math.random(); // shoot every 1.5–2.5 seconds
+                // shoot every 1.5–2.5 seconds
+                shootCooldown = 1.5f + (float) Math.random();
             }
 
 
@@ -51,10 +55,10 @@ public class EnemyControlSystem implements IEntityProcessingService {
 
     }
 
-    private Entity createBullet(Entity enemy, GameData gameData) {
+    private Entity createBullet(final Entity enemy, final GameData gameData) {
         Bullet bullet = new Bullet();
 
-        double radians = Math.toRadians(enemy.getRotation()); // <-- convert here
+        double radians = Math.toRadians(enemy.getRotation());
         float cos = (float) Math.cos(radians);
         float sin = (float) Math.sin(radians);
 

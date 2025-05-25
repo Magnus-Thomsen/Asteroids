@@ -1,25 +1,28 @@
 package dk.sdu.cbse.enemy;
 
-import dk.sdu.cbse.common.data.*;
-import dk.sdu.cbse.common.entities.player.IPlayer;
+import dk.sdu.cbse.common.data.World;
+import dk.sdu.cbse.common.data.GameData;
 import dk.sdu.cbse.common.services.IEntityProcessingService;
-import javafx.scene.paint.Color;
 
-public class EnemySpawnerSystem implements IEntityProcessingService {
+public final class EnemySpawnerSystem implements IEntityProcessingService {
 
-    private float spawnTimer = 10f;   // first extra enemy after 15 s
+    /**
+     * How long delay till the first enemies are spawned.
+     */
+    private float spawnTimer = 10f;   // first extra enemy after 10s
+
+    /**
+     * Delay for spawning additional enemies.
+     */
     private float interval = 10f;
 
     @Override
-    public void process(GameData gameData, World world) {
-
-        /* If the player is gone, stop spawning */
-        boolean playerAlive = world.getEntities().stream()
-                .anyMatch(e -> e instanceof IPlayer);
-        if (!playerAlive) return;
+    public void process(final GameData gameData, final World world) {
 
         spawnTimer -= gameData.getDelta();
-        if (spawnTimer > 0) return;
+        if (spawnTimer > 0) {
+            return;
+        }
 
         /* spawn one enemy */
         Enemy e = new Enemy();

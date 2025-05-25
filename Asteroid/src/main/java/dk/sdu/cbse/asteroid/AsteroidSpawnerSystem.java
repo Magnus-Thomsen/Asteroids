@@ -1,27 +1,44 @@
 package dk.sdu.cbse.asteroid;
 
-import dk.sdu.cbse.common.data.*;
+import dk.sdu.cbse.common.data.GameData;
+import dk.sdu.cbse.common.data.World;
 import dk.sdu.cbse.common.services.IEntityProcessingService;
 import javafx.scene.paint.Color;
 
 import java.util.Random;
 
-public class AsteroidSpawnerSystem implements IEntityProcessingService {
+public final class AsteroidSpawnerSystem implements IEntityProcessingService {
 
+    /**
+     * Random library allows for sized asteroids.
+     */
     private final Random random = new Random();
-    private float spawnTimer   = 5f;   // first asteroid after 5 s
-    private float interval     = 5f;   // current interval
-    private final float minInt = 1.5f; // don’t go faster than this
+
+    /**
+     * When first asteroid should spawn.
+     */
+    private float spawnTimer = 5f;
+
+    /**
+     * Current interval between asteroid spawns.
+     */
+    private float interval = 5f;
+
+    /**
+     * The minimal interval between asteroid spawns.
+     */
+    private final float minInterval = 1.5f;
 
     @Override
-    public void process(GameData gameData, World world) {
+    public void process(final GameData gameData, final World world) {
 
         spawnTimer -= gameData.getDelta();
-        if (spawnTimer > 0) return;
+        if (spawnTimer > 0) {
+            return;
+        }
 
 
-        int size = 1 + random.nextInt(3);// 1..3
-        System.out.println("Asteroid spawned. Size: " + size + ". " +"interval: " + interval);
+        int size = 1 + random.nextInt(3); // 1..3
         Asteroid asteroid = new Asteroid(size);
 
         asteroid.setX(random.nextDouble() * gameData.getDisplayWidth());
@@ -32,12 +49,13 @@ public class AsteroidSpawnerSystem implements IEntityProcessingService {
 
         float radius = size * 3;
         asteroid.setRadius(radius);
-        asteroid.setPolygonCoordinates(AsteroidPlugin.generateRandomPolygon(radius));
+        asteroid.setPolygonCoordinates(
+                AsteroidPlugin.generateRandomPolygon(radius));
 
         world.addEntity(asteroid);
 
         // —— make next interval a bit shorter (difficulty ramp)
-        interval = Math.max(minInt, interval - 0.2f);
+        interval = Math.max(minInterval, interval - 0.2f);
         spawnTimer = interval;
     }
 }

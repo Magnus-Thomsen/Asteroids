@@ -1,7 +1,5 @@
 package dk.sdu.cbse.player;
 
-//import dk.sdu.cbse.common.bullet.Bullet;
-//import dk.sdu.cbse.common.bullet.BulletSPI;
 import dk.sdu.cbse.bullet.Bullet;
 import dk.sdu.cbse.common.data.Entity;
 import dk.sdu.cbse.common.data.GameData;
@@ -9,16 +7,12 @@ import dk.sdu.cbse.common.data.GameKeys;
 import dk.sdu.cbse.common.data.World;
 import dk.sdu.cbse.common.services.IEntityProcessingService;
 
-import java.util.Collection;
-import java.util.ServiceLoader;
-
-import static java.util.stream.Collectors.toList;
 
 
-public class PlayerControlSystem implements IEntityProcessingService {
+public final class PlayerControlSystem implements IEntityProcessingService {
 
     @Override
-    public void process(GameData gameData, World world) {
+    public void process(final GameData gameData, final World world) {
 
         for (Entity player : world.getEntities(Player.class)) {
             if (gameData.getKeys().isDown(GameKeys.LEFT)) {
@@ -58,10 +52,10 @@ public class PlayerControlSystem implements IEntityProcessingService {
         }
     }
 
-    private Entity createBullet(Entity player, GameData gameData) {
+    private Entity createBullet(final Entity player, final GameData gameData) {
         Bullet bullet = new Bullet();
 
-        double radians = Math.toRadians(player.getRotation()); // <-- convert here
+        double radians = Math.toRadians(player.getRotation());
         float cos = (float) Math.cos(radians);
         float sin = (float) Math.sin(radians);
 
@@ -72,7 +66,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
         bullet.setDy(sin * bullet.getSpeed());
         bullet.setRadius(6);
         bullet.setPolygonCoordinates(-8, -1.5, -8, 1.5, 8, 1.5, 8, -1.5);
-        bullet.setOwnerID(player.getID());
+        bullet.setOwnerID(player.getId());
 
         return bullet;
     }
