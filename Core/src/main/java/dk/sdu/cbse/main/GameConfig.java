@@ -13,6 +13,16 @@ import java.util.List;
 public class GameConfig {
 
     /**
+     * Creates an instance of Game with all located services.
+     * @return Game instance.
+     */
+    @Bean
+    public Game game(){
+        return new Game(gamePluginServices(), entityProcessingServices(), postEntityProcessingServices());
+    }
+
+
+    /**
      * Locates all instances of IGamePluginServices.
      * @return List of IGamePluginService implementations.
      */
