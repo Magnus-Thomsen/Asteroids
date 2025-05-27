@@ -20,9 +20,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class Main extends Application {
@@ -78,6 +81,20 @@ public final class Main extends Application {
      */
     private boolean gameOverShown = false;
 
+    /**
+     * List of all loaded plugins.
+     */
+    private List<IGamePluginService> pluginServices;
+
+    /**
+     * List of all EntityProcessing Services.
+     */
+    private List<IEntityProcessingService> processingServices;
+
+    /**
+     * List of all PostEntityProcessing Services.
+     */
+    private List<IPostEntityProcessingService> postProcessingServices;
 
 
     public static void main(final String[] args) {
@@ -86,6 +103,14 @@ public final class Main extends Application {
 
     @Override
     public void start(final Stage primaryStage) {
+
+        ApplicationContext context = new AnnotationConfigApplicationContext(GameConfig.class);
+
+        this.pluginServices = context.getBean("gamePluginServices", List.class);
+        this.processingServices = context.getBean("entityProcessingServices", List.class);
+        this.postProcessingServices = context.getBean("postEntityProcessingServices", List.class);
+
+
         gameWindow.setPrefSize(gameData.getDisplayWidth(),
                 gameData.getDisplayHeight());
         gameWindow.setStyle("-fx-background-color: black;");
@@ -93,9 +118,8 @@ public final class Main extends Application {
 
         InputProcessor.setupInputHandling(scene, gameData);
 
-        for (IGamePluginService iGamePluginService : getPluginServices()) {
-            iGamePluginService.start(gameData, world);
-        }
+
+        pluginServices.forEach(p -> p.start(gameData, world));
 
         for (Entity entity : world.getEntities()) {
             Polygon polygon = new Polygon(entity.getPolygonCoordinates());
@@ -162,15 +186,8 @@ public final class Main extends Application {
 
     private void update() {
 
-        for (IEntityProcessingService entityProcessorService
-                : getEntityProcessingServices()) {
-            entityProcessorService.process(gameData, world);
-        }
-
-        for (IPostEntityProcessingService postEntityProcessorService
-                : getPostEntityProcessingServices()) {
-            postEntityProcessorService.process(gameData, world);
-        }
+        processingServices.forEach(s -> s.process(gameData, world));
+        postProcessingServices.forEach(s -> s.process(gameData, world));
     }
 
     private void draw() {
@@ -250,22 +267,6 @@ public final class Main extends Application {
         restartButton.setVisible(true);
     }
 
-    private Collection<? extends IGamePluginService> getPluginServices() {
-        return ServiceLocator.INSTANCE.locateAll(IGamePluginService.class);
-    }
-
-    private Collection<? extends IEntityProcessingService>
-    getEntityProcessingServices() {
-        return ServiceLocator.INSTANCE.locateAll(
-                IEntityProcessingService.class);
-    }
-
-    private Collection<? extends IPostEntityProcessingService>
-    getPostEntityProcessingServices() {
-        return ServiceLocator.INSTANCE.locateAll(
-                IPostEntityProcessingService.class);
-    }
-
     private void addStars(final int count) {
         for (int i = 0; i < count; i++) {
             // random radius
@@ -291,10 +292,10 @@ public final class Main extends Application {
 
         gameData.getScore().reset();
 
-        for (IGamePluginService plugin : getPluginServices()) {
-            plugin.stop(gameData, world);
-            plugin.start(gameData, world);
-        }
+        pluginServices.forEach(p -> {
+            p.stop(gameData, world);
+            p.start(gameData, world);
+        });
     }
 
 
