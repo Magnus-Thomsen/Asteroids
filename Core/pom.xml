@@ -86,6 +86,12 @@
             <artifactId>spring-expression</artifactId>
             <version>6.1.14</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>5.3.39</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -115,7 +121,7 @@
                         <goals><goal>copy-dependencies</goal></goals>
                         <configuration>
                             <includeArtifactIds>
-                                spring-context,spring-core,spring-beans,commons-logging,spring-aop, spring-expression
+                                spring-context,spring-core,spring-beans,commons-logging,spring-aop, spring-expression, spring-web
                             </includeArtifactIds>
                             <outputDirectory>../mods-mvn</outputDirectory>
                         </configuration>

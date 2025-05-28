@@ -1,29 +1,31 @@
 package dk.sdu.cbse.common.data;
 
+import org.springframework.web.client.RestTemplate;
+
 public final class Score {
 
     /**
-     * Current score.
+     * RestTemplate for adding score using http requests.
      */
-    private int score = 0;
+    RestTemplate restTemplate = new RestTemplate();
 
     /**
-     * Add score.
+     * Add score using .
      * @param amount Score amount to add.
      */
     public void add(final int amount) {
-        score += amount;
+        restTemplate.getForObject("http://localhost:8080/score?points=" + amount, String.class);
     }
 
-    public int getScore() {
-        return score;
+    public String getScore() {
+        return restTemplate.getForObject("http://localhost:8080/current", String.class);
     }
 
     /**
      * Resets the score.
      */
     public void reset() {
-        score = 0;
+        restTemplate.getForObject("http://localhost:8080/reset", String.class);
     }
 
 }
