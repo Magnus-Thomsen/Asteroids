@@ -162,18 +162,29 @@ public final class Game {
 
     public void render() {
         final long[] lastTime = {System.nanoTime()};
+        final float speedFactor = 0.5f; // You can still use this for slowing down the game
+        final long frameTime = 1_000_000_000L / 60; // For 60 FPS (1 frame every ~16.67ms)
 
         new AnimationTimer() {
             @Override
             public void handle(final long now) {
-                float delta = (now - lastTime[0]) / 1_000_000_000f;
-                lastTime[0] = now;
+                // Calculate the time since the last frame
+                long elapsedTime = now - lastTime[0];
 
-                gameData.setDelta(delta);
+                // Check if enough time has passed for the next frame (60 FPS)
+                if (elapsedTime >= frameTime) {
+                    // Update the last time to the current time
+                    lastTime[0] = now;
 
-                update();
-                draw();
-                gameData.getKeys().update();
+                    // Calculate delta time, scaling it with speed factor if needed
+                    float delta = elapsedTime / 1_000_000_000f * speedFactor;
+
+                    // Set the delta time and update game state
+                    gameData.setDelta(delta);
+                    update();
+                    draw();
+                    gameData.getKeys().update();
+                }
             }
         }.start();
     }
