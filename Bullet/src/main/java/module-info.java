@@ -5,4 +5,6 @@ module Bullet {
     requires Common;
     requires javafx.graphics;
     provides IEntityProcessingService with dk.sdu.cbse.bullet.BulletControlSystem;
+    provides dk.sdu.cbse.common.entities.bullet.IBulletFactory
+            with dk.sdu.cbse.bullet.BulletFactory;
 }

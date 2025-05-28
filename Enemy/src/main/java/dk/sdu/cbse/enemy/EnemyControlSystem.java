@@ -1,12 +1,18 @@
 package dk.sdu.cbse.enemy;
 
-import dk.sdu.cbse.bullet.Bullet;
 import dk.sdu.cbse.common.data.Entity;
 import dk.sdu.cbse.common.data.GameData;
 import dk.sdu.cbse.common.data.World;
+import dk.sdu.cbse.common.entities.bullet.IBulletFactory;
 import dk.sdu.cbse.common.services.IEntityProcessingService;
+import dk.sdu.cbse.common.util.ServiceLocator;
+
+import java.util.List;
 
 public final class EnemyControlSystem implements IEntityProcessingService {
+
+    private final List<IBulletFactory> bulletFactory =
+            ServiceLocator.INSTANCE.locateAll(IBulletFactory.class);
 
     /**
      * Cooldown after enemy shoots.
@@ -45,7 +51,10 @@ public final class EnemyControlSystem implements IEntityProcessingService {
             // Shoot bullets every X seconds
             shootCooldown -= gameData.getDelta();
             if (shootCooldown <= 0) {
-                world.addEntity(createBullet(e, gameData));
+                if (!bulletFactory.isEmpty()){
+                    Entity bullet = bulletFactory.getFirst().createBullet(e, gameData);
+                    world.addEntity(bullet);
+                }
                 // shoot every 1.5–2.5 seconds
                 shootCooldown = 1.5f + (float) Math.random();
             }
@@ -53,23 +62,5 @@ public final class EnemyControlSystem implements IEntityProcessingService {
 
         }
 
-    }
-
-    private Entity createBullet(final Entity enemy, final GameData gameData) {
-        Bullet bullet = new Bullet();
-
-        double radians = Math.toRadians(enemy.getRotation());
-        float cos = (float) Math.cos(radians);
-        float sin = (float) Math.sin(radians);
-
-        bullet.setX(enemy.getX() + cos * 20);     // nose-tip offset
-        bullet.setY(enemy.getY() + sin * 20);
-        bullet.setRotation(enemy.getRotation());   // keep rotation in degrees
-        bullet.setDx(cos * bullet.getSpeed());
-        bullet.setDy(sin * bullet.getSpeed());
-        bullet.setRadius(6);
-        bullet.setPolygonCoordinates(-8, -1.5, -8, 1.5, 8, 1.5, 8, -1.5);
-
-        return bullet;
     }
 }

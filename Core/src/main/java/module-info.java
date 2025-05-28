@@ -1,7 +1,6 @@
 module Core {
     requires Common;
     requires javafx.graphics;
-    requires Bullet;
     requires javafx.controls;
     opens dk.sdu.cbse.main to javafx.graphics;
     uses dk.sdu.cbse.common.services.IGamePluginService;
