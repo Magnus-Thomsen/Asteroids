@@ -1,3 +1,4 @@
+import dk.sdu.cbse.common.entities.bullet.IBulletFactory;
 import dk.sdu.cbse.common.services.IEntityProcessingService;
 
 module Bullet {
@@ -5,4 +6,5 @@ module Bullet {
     requires Common;
     requires javafx.graphics;
     provides IEntityProcessingService with dk.sdu.cbse.bullet.BulletControlSystem;
+    provides IBulletFactory with dk.sdu.cbse.bullet.BulletFactory;
 }
