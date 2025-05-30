@@ -12,22 +12,10 @@
   <packaging>jar</packaging>
   <name>Player</name>
   <dependencies>
-    <dependency>
-      <groupId>dk.sdu.cbse</groupId>
-      <artifactId>Common</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
       <dependency>
           <groupId>dk.sdu.cbse</groupId>
           <artifactId>Common</artifactId>
           <version>1.0.1-SNAPSHOT</version>
-          <scope>compile</scope>
-      </dependency>
-      <dependency>
-          <groupId>dk.sdu.cbse</groupId>
-          <artifactId>Bullet</artifactId>
-          <version>1.0-SNAPSHOT</version>
           <scope>compile</scope>
       </dependency>
   </dependencies>
